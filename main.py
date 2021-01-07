@@ -1,7 +1,6 @@
 import discord
 import os
 import asyncio
-import datetime
 from collections.abc import Sequence
 
 
@@ -13,41 +12,46 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
-        return
+		if message.author == client.user:
+			return
 
-    cmd = message.content
+		cmd = message.content
 
-    if cmd.startswith('$hello'):
-        await message.channel.send('Hello!')
+		if cmd.startswith('$hello'):
+			await message.channel.send('Hello!')
 
-    if cmd.startswith('$wheel'):
-      #get system time
-      #commandTime = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-      #print(commandTime)
+		if cmd.startswith('$wheel'):
 
-      #get users
-      author = message.author
-      y = author
-      userProfiles = [y]
-      for member in message.mentions:
-        userProfiles.append(member)
+			#get users
+			author = message.author
+			y = author
+			userProfiles = [y]
+			for member in message.mentions:
+				userProfiles.append(member)
 
-      try:
-        for x in userProfiles:
-          print(x.name)
-          await x.send("Please respond with your chosen number")
-          response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
-          print(response.content)
-          #await message.channel.send(x.mention)
-          
+			try:
+				responseDict = {}
+				for x in userProfiles:
+					print(x.name)
+					await x.send("Please respond with your chosen number")
+					print("Sending dm to " + x.name)
+					response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
+					print(x.name + " responds with: " +response.content)
 
-      except asyncio.TimeoutError:
-        print('Responses timed out!')
-        await message.channel.send('Responses timed out!')
-        return
-      except:
-        print('Oops!')
+					#await message.channel.send(x.mention)
+					responseDict.update({x.mention : response.content})
+
+					if len(responseDict) >= len(userProfiles):
+						#format responseDict
+						await message.channel.send(responseDict)
+
+			except asyncio.TimeoutError:
+				print('Responses timed out!')
+				await message.channel.send('Responses timed out!')
+				return
+			#except:
+				#print('Oops!')
+				#return
 
 
 
