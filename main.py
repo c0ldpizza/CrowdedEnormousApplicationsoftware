@@ -1,5 +1,6 @@
 import discord
 import os
+import asyncio
 import datetime
 from collections.abc import Sequence
 
@@ -32,13 +33,24 @@ async def on_message(message):
       for member in message.mentions:
         userProfiles.append(member)
 
-      print(userProfiles)
+      try:
+        for x in userProfiles:
+          print(x.name)
+          await x.send("Please respond with your chosen number")
+          response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
+          print(response.content)
+          #await message.channel.send(x.mention)
+          
 
-      for x in userProfiles:
-        await x.send("Please respond with your chosen number")
-        response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
-        print(response.content)
-        #await message.channel.send(x.mention)
+      except asyncio.TimeoutError:
+        print('Responses timed out!')
+        await message.channel.send('Responses timed out!')
+        return
+      except:
+        print('Oops!')
+
+
+
 
 def make_sequence(seq):
     if seq is None:
