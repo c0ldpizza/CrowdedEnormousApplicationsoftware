@@ -43,7 +43,13 @@ async def on_message(message):
 
 					if len(responseDict) >= len(userProfiles):
 						#format responseDict
-						await message.channel.send(responseDict)
+						a = '''Results:
+						'''
+						for x, y in responseDict.items():
+							a += x + ' : ' + y + '''
+							'''
+						await message.channel.send(a)
+						return
 
 			except asyncio.TimeoutError:
 				print('Responses timed out!')
