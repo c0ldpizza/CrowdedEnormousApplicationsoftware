@@ -20,6 +20,9 @@ async def on_message(message):
 		if cmd.startswith('$hello'):
 			await message.channel.send('Hello!')
 
+		if cmd.startswith('$wheelhelp'):
+			await message.channel.send('Hello!')
+
 		if cmd.startswith('$wheel'):
 
 			#get users
@@ -33,48 +36,56 @@ async def on_message(message):
 				responseDict = {}
 				for x in userProfiles:
 					print(x.name)
-					await x.send("Please respond with your chosen number")
-					print("Sending dm to " + x.name)
+					await x.send('Please respond with your chosen number. Channel will remain open until a valid response is submitted.')
 
+					response = ''
 					responseIsValid = False
+					i = 0
 
 					while responseIsValid == False:
+						i += 1
+						print('Sending message # {} to {}'.format(str(i), x.name))
+
 						response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
-						response.content = sanitizeResponse(response.content)
-						responseIsValid = checkIfResponseIsValid(response.content)
-
-					print(x.name + " responds with: " +response.content)
-
-					#await message.channel.send(x.mention)
-					responseDict.update({x.mention : response.content})
-
-					if len(responseDict) >= len(userProfiles):
-						#format responseDict
-						a = '''Results:
-						'''
-						for x, y in responseDict.items():
-							a += x + ' : ' + y + '''
-							'''
-						await message.channel.send(a)
-						return
+						response = sanitizeResponse(response.content)
+						responseIsValid = checkIfResponseIsValid(response)
+						if responseIsValid:
+							print('{0} responds with: {1}'.format(x.name, str(response)))
+							responseDict.update({x.mention : response})
+							break
+						else:
+							continue
+					
+				if len(responseDict) >= len(userProfiles):
+					#format responseDict
+					results = 'Results:\n'
+					for x, y in responseDict.items():
+						results += x + ' : ' + str(y) + '\n'
+						
+					await message.channel.send(results)
+					return
 
 			except asyncio.TimeoutError:
 				print('Responses timed out!')
 				await message.channel.send('Responses timed out!')
 				return
-			except:
-				print('Oops!')
-				return
+			#except:
+				#print('Oops!')
+				#return
+			finally:
+				print("wheeling complete")
 
 
 
 def sanitizeResponse(response):
-		response = response.strip()
-		response = response.split()[0]
-		response = int(response)
-		return response
+		try:
+			response = response.strip()
+			response = response.split()[0]
+			response = int(response)
+		finally:
+			return response
 
-def checkIfResponseIsValid(response):
+def checkIfResponseIsValid(response):		
 
 		if isinstance(response, int):
 			if response >= 0:
