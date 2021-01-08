@@ -2,7 +2,7 @@ import discord
 import os
 import asyncio
 from collections.abc import Sequence
-
+from keep_alive import keep_alive
 
 client = discord.Client()
 
@@ -35,7 +35,14 @@ async def on_message(message):
 					print(x.name)
 					await x.send("Please respond with your chosen number")
 					print("Sending dm to " + x.name)
-					response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
+
+					responseIsValid = False
+
+					while responseIsValid == False:
+						response = await client.wait_for('message', timeout=120.0,check=message_check(channel=x.dm_channel))
+						response.content = sanitizeResponse(response.content)
+						responseIsValid = checkIfResponseIsValid(response.content)
+
 					print(x.name + " responds with: " +response.content)
 
 					#await message.channel.send(x.mention)
@@ -55,11 +62,25 @@ async def on_message(message):
 				print('Responses timed out!')
 				await message.channel.send('Responses timed out!')
 				return
-			#except:
-				#print('Oops!')
-				#return
+			except:
+				print('Oops!')
+				return
 
 
+
+def sanitizeResponse(response):
+		response = response.strip()
+		response = response.split()[0]
+		response = int(response)
+		return response
+
+def checkIfResponseIsValid(response):
+
+		if isinstance(response, int):
+			if response >= 0:
+				print("is valid")
+				return True
+		return False			
 
 
 def make_sequence(seq):
@@ -89,4 +110,5 @@ def message_check(channel=None, author=None, content=None, ignore_bot=True, lowe
       return True
   return check
 
+keep_alive()
 client.run(os.getenv('TOKEN'))
