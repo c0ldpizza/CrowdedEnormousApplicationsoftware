@@ -3,6 +3,9 @@ import os
 import asyncio
 from collections.abc import Sequence
 from keep_alive import keep_alive
+from Land import Land
+from StapleLands import StapleLands
+#https://uptimerobot.com/dashboard#786868655
 
 client = discord.Client()
 
@@ -15,13 +18,17 @@ async def on_message(message):
 		if message.author == client.user:
 			return
 
-		cmd = message.content
+		cmd = message.content.casefold()
 
 		if cmd.startswith('$hello'):
 			await message.channel.send('Hello!')
 
 		if cmd.startswith('$wheelhelp'):
-			await message.channel.send('Hello!')
+			await message.channel.send('''Enter command as follows to spin the wheel:\n
+			$wheel @Player2 @Player3 @Player4''')
+
+		if cmd.startswith('$manabase'):			
+			manabaseSuggestion(cmd)
 
 		if cmd.startswith('$wheel'):
 
@@ -120,6 +127,17 @@ def message_check(channel=None, author=None, content=None, ignore_bot=True, lowe
           return False
       return True
   return check
+
+def manabaseSuggestion(cmd=None):
+
+	cmdList = cmd.split(' ', 5)
+	cmdColors = cmdList[1]
+	deckColors = split(cmdColors)
+	StapleLands.getStapleLands(deckColors)
+
+	
+def split(word):
+    return list(word)
 
 keep_alive()
 client.run(os.getenv('TOKEN'))
