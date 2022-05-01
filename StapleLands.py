@@ -16,7 +16,7 @@ class StapleLands:
     def initStapleLands():
         staples = list()
 
-        badlands = Land("Badlands", "dual", ['r', 'g'])
+        badlands = Land("Badlands", "dual", ['b', 'r'])
         bayou = Land("Bayou", "dual", ['b', 'g'])
         plateau = Land("Plateau", "dual", ['w', 'r'])
         savannah = Land("Savannah", "dual", ['w', 'g'])
