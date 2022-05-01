@@ -26,12 +26,12 @@ async def on_message(message):
 
     if cmd.startswith('$help'):
         await message.channel.send(
-            '''Wheel of Misfortune Bot supports the following commands:\n
-      $hello\n
-			$wheel\n
-			$wheelhelp\n
-			$manabase\n
-			$manabasehelp''')
+            '''Wheel of Misfortune Bot supports the following commands:
+$hello
+$wheel @Player2 @Player3 @Player4
+$wheelhelp
+$manabase WUBRG
+$manabasehelp''')
 
     if cmd.startswith('$wheelhelp'):
         await message.channel.send(
@@ -40,8 +40,8 @@ async def on_message(message):
 
     if cmd.startswith('$manabasehelp'):
         await message.channel.send(
-            '''Enter command as follows:\n
-			$manabase WUBRG''')
+            '''Enter command as follows: $manabase WUBRG\n
+			example: $manabase WRG''')
 
     if cmd.startswith('$manabase') or cmd.startswith('$mb'):
         x = manabaseSuggestion(cmd)
