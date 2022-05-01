@@ -24,12 +24,26 @@ async def on_message(message):
     if cmd.startswith('$hello'):
         await message.channel.send('Hello!')
 
+    if cmd.startswith('$help'):
+        await message.channel.send(
+            '''Wheel of Misfortune Bot supports the following commands:\n
+      $hello\n
+			$wheel\n
+			$wheelhelp\n
+			$manabase\n
+			$manabasehelp''')
+
     if cmd.startswith('$wheelhelp'):
         await message.channel.send(
             '''Enter command as follows to spin the wheel:\n
 			$wheel @Player2 @Player3 @Player4''')
 
-    if cmd.startswith('$manabase'):
+    if cmd.startswith('$manabasehelp'):
+        await message.channel.send(
+            '''Enter command as follows:\n
+			$manabase WUBRG''')
+
+    if cmd.startswith('$manabase') or cmd.startswith('$mb'):
         x = manabaseSuggestion(cmd)
 
         await message.channel.send(x)
@@ -149,8 +163,18 @@ def message_check(channel=None,
 def manabaseSuggestion(cmd=None):
 
     cmdList = cmd.split(' ', 5)
-    cmdColors = cmdList[1]
+    try:
+      cmdColors = cmdList[1]
+    except:
+      output = "Please format your request like: $manabase WUBRG"
+      return output
+
     deckColors = split(cmdColors)
+
+    if len(deckColors) == 1:
+      output = "Idk...basics?"
+      return output
+			
     stapleLands = StapleLands.getStapleLands(deckColors)
     
     output = '\n'.join(x.name for x in stapleLands)

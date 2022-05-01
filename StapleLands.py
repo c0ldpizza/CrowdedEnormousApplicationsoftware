@@ -85,7 +85,7 @@ class StapleLands:
         commandTower = Land("Command Tower", "5c", ['w', 'u', 'b', 'r', 'g'])
         exoticOrchard = Land("Exotic Orchard", "5c", ['w', 'u', 'b', 'r', 'g'])
         cityOfBrass = Land("City of Brass", "5c", ['w', 'u', 'b', 'r', 'g'])
-        manaConfluence = Land("Mana Conflunece", "5c", ['w', 'u', 'b', 'r', 'g'])
+        manaConfluence = Land("Mana Confluence", "5c", ['w', 'u', 'b', 'r', 'g'])
         tarnishedCitadel = Land("Tarnished Citadel", "5c", ['w', 'u', 'b', 'r', 'g'])
         forbiddenOrchard = Land("Forbidden Orchard", "5c", ['w', 'u', 'b', 'r', 'g'])
 
